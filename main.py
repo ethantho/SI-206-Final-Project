@@ -13,7 +13,7 @@ class Source(Enum):
     """
 
     # Stock market API returns the last 100 days of data from Dow Jones (DOW)
-    STOCKS = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=DIA&apikey=PH5DHJILCNX7HL81"
+    STOCKS = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=DIA&outputsize=full&apikey=PH5DHJILCNX7HL81"
     GAMES = ""
     MOVIES = ""
 
@@ -25,11 +25,11 @@ def get_api_data(source):
         source (Source enum class) - the source to collect data from
     """
 
-    if source == Source.STOCKS.name:
+    if source == Source.STOCKS:
         return requests.get(Source.STOCKS.value).json()
-    elif source == Source.GAMES.name:
+    elif source == Source.GAMES:
         return requests.get(Source.GAMES.value).json()
-    elif source == Source.MOVIES.name:
+    elif source == Source.MOVIES:
         return requests.get(Source.MOVIES.value).json()
     
     return
