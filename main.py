@@ -12,7 +12,8 @@ class Source(Enum):
     Stores the API link of each source in a name
     """
 
-    STOCKS = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=DOW&apikey=PH5DHJILCNX7HL81"
+    # Stock market API returns the last 100 days of data from Dow Jones (DOW)
+    STOCKS = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=DIA&apikey=PH5DHJILCNX7HL81"
     GAMES = ""
     MOVIES = ""
 
