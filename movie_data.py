@@ -10,6 +10,19 @@ def get_random_movie_info(cur: sqlite3.Cursor, conn: sqlite3.Connection, cycles=
     rand_name = "".join(random.choices(string.ascii_lowercase, k=5))
     query = f'{IMDB_QUERY_URL}?q="{rand_name}"'
 
+    req = requests.get(query)
+    
+    if not req.ok:
+        return
+    body = json.loads(req.text) 
+    if body["error_code"] == 200:
+        #print(body)
+        conn.executemany(
+            "INSERT INTO ImdbInfo (id) VALUES (?)", 
+            map(lambda x: (int(x["#IMDB_ID"].strip("t")),), body["description"])
+        )
+    conn.commit()
+
 def initialize_tables(conn: sqlite3.Connection):
     conn.execute(
         "CREATE TABLE IF NOT EXISTS ImdbInfo (" \
@@ -32,6 +45,7 @@ def initialize_tables(conn: sqlite3.Connection):
 def main(conn: sqlite3.Connection):
     cur = conn.cursor()    
     initialize_tables(conn)
+    get_random_movie_info(cur, conn, 3)
 
 if __name__ == "__main__":
     conn = sqlite3.connect("db.sqlite3")
