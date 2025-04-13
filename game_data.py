@@ -19,10 +19,7 @@ def main(conn: sqlite3.Connection):
         print(game)
         if 'first_release_date' not in game:
             continue
-        #date_id = game['release_dates'][0]
-        #date_id = requests.post('https://api.igdb.com/v4/release_dates', **{'headers': {'Client-ID': client_id, 'Authorization': ("Bearer " + access_token)},'data': 'fields date;'})
         cur.execute("INSERT OR IGNORE INTO games VALUES (?,?,?)", (game['id'], game['name'], game['first_release_date']))
-    #print(response.json())
     conn.commit()
 
 if __name__ == "__main__":
