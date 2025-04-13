@@ -37,7 +37,12 @@ def initialize_tables(conn: sqlite3.Connection):
 
     conn.commit()
 
-def get_random_movie_info(cur: sqlite3.Cursor, conn: sqlite3.Connection, cycles=3):
+def get_random_movie_info(conn: sqlite3.Connection, cycles=3):
+    count = conn.execute("SELECT COUNT(*) FROM ImdbInfo WHERE checked = 0").fetchone()[0]
+    print (count)
+    if count > 25:
+        return
+
     for _ in range(cycles):
         rand_name = "".join(random.choices(string.ascii_lowercase, k=3))
         query = f'{IMDB_QUERY_URL}?q="{rand_name}"'
@@ -68,12 +73,16 @@ def get_genre(genre: str, conn: sqlite3.Connection) -> int:
 
 def parse_movie_obj(imdb_id: str, data: dict, conn: sqlite3.Connection):
     name = data.get("Title")
-    release_timestamp = dt.datetime.strptime(data.get("Released", ""), "%d %b %Y")
+    try:
+        release_timestamp = dt.datetime.strptime(data.get("Released", ""), "%d %b %Y")
+    except ValueError:
+        return
+
     genre_id = get_genre(data.get("Genre", "").split(",")[0], conn)
     
     conn.execute(
-        "INSERT OR IGNORE INTO Movies" \
-        "(imdb_id, name, release_date, genre_id)" \
+        "INSERT OR IGNORE INTO Movies " \
+        "(imdb_id, name, release_date, genre_id) " \
         "VALUES (?, ?, ?, ?)",
         (imdb_id, name, release_timestamp, genre_id)
     )
@@ -101,9 +110,8 @@ def fetch_omdb_info(conn: sqlite3.Connection):
     conn.commit()
 
 def main(conn: sqlite3.Connection):
-    cur = conn.cursor()    
     initialize_tables(conn)
-    get_random_movie_info(cur, conn, 3)
+    get_random_movie_info(conn, 3)
     fetch_omdb_info(conn)
     # with open("sample-movie.json") as file:
     #     parse_movie_obj("tt27829165", json.load(file), conn)
