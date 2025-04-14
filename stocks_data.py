@@ -17,13 +17,14 @@ def main(conn: sqlite3.Connection):
 
     first_pass = True
 
-    cur.execute("IF EXISTS TABLE WHERE TABLE_NAME = 'stocks' SELECT 1 ELSE SELECT 0")
-    if cur.fetchone()[0] == 0:
-        first_pass = True
-    else:
+    cur.execute("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'stocks'")
+    stocks_exists = cur.fetchone()
+    if stocks_exists:
         first_pass = False
+    else:
+        first_pass = True
 
-    cur.execute("CREATE TABLE IF NOT EXISTS stocks (id INTEGER PRIMARY KEY, date DATETIME, open FLOAT, high FLOAT NOT, low FLOAT, close FLOAT)")
+    cur.execute("CREATE TABLE IF NOT EXISTS stocks (date DATETIME PRIMARY KEY, open FLOAT, high FLOAT, low FLOAT, close FLOAT)")
 
     data = requests.get(url).json()
 
@@ -38,27 +39,30 @@ def main(conn: sqlite3.Connection):
 
             dt_date = parser.parse(item)
 
-            cur.execute("INSERT INTO stocks VALUES (?,?,?,?,?)", (dt_date, stock_data[item]["1. open"], stock_data[item]["2. high"], stock_data[item]["3. low"], stock_data[item]["4. close"]))
+            cur.execute("INSERT INTO stocks VALUES (?,?,?,?,?)", (dt_date, float(stock_data[item]["1. open"]), float(stock_data[item]["2. high"]), float(stock_data[item]["3. low"]), float(stock_data[item]["4. close"])))
 
             item_counter += 1
     else:
-        cur.execute("SELECT date FROM stocks ORDER BY id DESC LIMIT 1")
+        cur.execute("SELECT date FROM stocks ORDER BY date ASC LIMIT 1")
         most_recent_entry = cur.fetchone()[0]
 
         for item in stock_data:
 
             if item_counter > 20:
                 break
-            
-            dt_item = parser.parse(item)
 
-            if (dt_item >= most_recent_entry):
+            dt_date = parser.parse(item)
+
+            dt_mre = parser.parse(most_recent_entry)
+
+            if (dt_date >= dt_mre):
                 continue
 
             cur.execute("INSERT INTO stocks VALUES (?,?,?,?,?)", (dt_date, stock_data[item]["1. open"], stock_data[item]["2. high"], stock_data[item]["3. low"], stock_data[item]["4. close"]))
 
             item_counter += 1
 
+    conn.commit()
 
     return
 
