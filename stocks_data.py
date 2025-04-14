@@ -1,6 +1,6 @@
 # Ethan Leach (lethan), Ethan Thompson (ethantho), Saicharan Vemuri (scharan)
 # SI 206 - Final Project
-# Stock Market script
+# Stock Market data collection (taking from DJI ETF)
 
 import json
 import datetime
@@ -48,7 +48,7 @@ def main(conn: sqlite3.Connection):
 
         for item in stock_data:
 
-            if item_counter > 20:
+            if item_counter >= 20:
                 break
 
             dt_date = parser.parse(item)
