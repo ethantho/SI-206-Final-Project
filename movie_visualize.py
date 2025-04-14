@@ -1,4 +1,5 @@
 import sqlite3
+import csv
 
 import matplotlib.pyplot as plt
 
@@ -18,6 +19,11 @@ def main(conn: sqlite3.Connection):
         "GROUP BY year, genre_id "
     ).fetchall()
     
+    with open("movie_calculations.csv", "w") as file:
+        writer = csv.writer(file, lineterminator="\n")
+        writer.writerow(["year", "count"])
+        writer.writerows(values)
+
     plt.bar(get_index(values, 0), get_index(values, 1))
     plt.xlabel("Year")
     plt.ylabel("# Of Movies Released")
