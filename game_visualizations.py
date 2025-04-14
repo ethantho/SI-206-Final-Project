@@ -18,6 +18,11 @@ def main(conn: sqlite3.Connection):
     plot.ylabel('Number of Games Released')
     plot.show()
 
+    with open("game_calculations.txt", 'w') as file:
+        file.write("Releases per year in our sample:\n")
+        for year, count in releases_by_year.items():
+            file.write(f"{year}: {count}\n")
+
 
 if __name__ == "__main__":
     conn = sqlite3.connect("db.sqlite3")
