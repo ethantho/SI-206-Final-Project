@@ -8,11 +8,11 @@ def get_index(array: list[tuple], index: int):
 def main(conn: sqlite3.Connection):
     releases_by_year = {}
     values = conn.execute(
-        "SELECT release_date + 0 AS year, COUNT(*) FROM Movies GROUP BY year;"
+        "SELECT CAST(release_date AS INT) AS year, COUNT(*) FROM Movies GROUP BY year;"
     ).fetchall()
     
     values_genre = conn.execute(
-        "SELECT release_date + 0 AS year, MovieGenres.genre_name, COUNT(*) "
+        "SELECT CAST(release_date AS INT) AS year, MovieGenres.genre_name, COUNT(*) "
         "FROM Movies " 
         "JOIN MovieGenres ON genre_id = MovieGenres.id "
         "GROUP BY year, genre_id "
