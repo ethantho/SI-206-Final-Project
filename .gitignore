@@ -1,1 +1,7 @@
 db.sqlite3
+__pycache__
+
+#generated files should not be included in the repo 
+combined.csv
+movie_calculations.csv
+game_calculations.txt
