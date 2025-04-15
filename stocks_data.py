@@ -34,7 +34,7 @@ def main(conn: sqlite3.Connection):
 
     if first_pass:
         for item in stock_data:
-            if item_counter > 20:
+            if item_counter >= 20:
                 break
 
             dt_date = parser.parse(item)
