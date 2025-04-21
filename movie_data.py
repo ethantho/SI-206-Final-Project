@@ -6,6 +6,7 @@ import sqlite3
 import time
 import datetime as dt
 import functools
+import warnings
 
 IMDB_QUERY_URL = "https://imdb.iamidiotareyoutoo.com/search"
 OMDB_QUERY_URL = "http://www.omdbapi.com/?apikey=94921550&"
@@ -79,7 +80,7 @@ def parse_movie_obj(imdb_id: str, data: dict, conn: sqlite3.Connection):
         return
 
     genre_id = get_genre(data.get("Genre", "").split(",")[0], conn)
-    
+    warnings.simplefilter("ignore", DeprecationWarning)
     conn.execute(
         "INSERT OR IGNORE INTO Movies " \
         "(imdb_id, name, release_date, genre_id) " \

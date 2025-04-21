@@ -13,10 +13,13 @@ def main(conn: sqlite3.Connection):
         avgprice = (item[1] + item[2]) / 2.0
         avg_price_by_month[item[0]] = avgprice
     
+    plot.cla()
     plot.bar(avg_price_by_month.keys(), avg_price_by_month.values())
     plot.xlabel('Month')
+    plot.title("Stock Price By Month")
     plot.ylabel('Average Stock Price in USD (DIA)')
-    plot.show()
+    plot.savefig("stocks.png")
+    #plot.show()
 
 
     with open("stock_calculations.txt", 'w') as file:

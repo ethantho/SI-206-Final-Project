@@ -44,7 +44,9 @@ def main(conn: sqlite3.Connection):
     line1 = ax.plot(years, list(map(lambda x: x/stock_scaling_factor, stocks)), "r-")
 
     ax.legend((rect1[0], rect2[0], line1[0]), ("Movies", "Games", "Avg Stock Price"))
-    plt.show()
+    plt.title("Stock Prices vs Movies & Game Releases Per Year (2000-2025)")
+    plt.savefig("combined.png", bbox_inches='tight')
+    #plt.show()
 
 
 

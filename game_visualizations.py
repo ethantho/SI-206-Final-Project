@@ -13,10 +13,12 @@ def main(conn: sqlite3.Connection):
     for i in range(1970, 2024):
         releases_by_year[i] = int(cur.execute("SELECT COUNT(*) FROM games WHERE release_date > ? AND release_date < ?", (year_to_timestamp(i), year_to_timestamp(i+1))).fetchone()[0])
 
+    plot.cla()
     plot.bar(releases_by_year.keys(), releases_by_year.values())
     plot.xlabel('Year')
     plot.ylabel('Number of Games Released')
-    plot.show()
+    plot.savefig("stocks.png")
+    #plot.show()
 
     with open("game_calculations.txt", 'w') as file:
         file.write("Releases per year in our sample:\n")
