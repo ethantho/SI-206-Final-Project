@@ -14,10 +14,11 @@ def main(conn: sqlite3.Connection):
         avg_price_by_month[item[0]] = avgprice
     
     plot.cla()
-    plot.bar(avg_price_by_month.keys(), avg_price_by_month.values())
+    plot.plot(avg_price_by_month.keys(), avg_price_by_month.values())
     plot.xlabel('Month')
-    plot.title("Stock Price By Month")
-    plot.ylabel('Average Stock Price in USD (DIA)')
+    plot.title("Average DIA Stock Price By Month")
+    plot.ylabel('Average DIA Stock Price (USD)')
+    
     plot.savefig("stocks.png")
     #plot.show()
 
