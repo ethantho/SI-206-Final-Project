@@ -15,9 +15,10 @@ def main(conn: sqlite3.Connection):
 
     plot.cla()
     plot.bar(releases_by_year.keys(), releases_by_year.values())
+    plot.title("Number of Games released in our Sample (by year)")
     plot.xlabel('Year')
     plot.ylabel('Number of Games Released')
-    plot.savefig("stocks.png")
+    plot.savefig("games.png")
     #plot.show()
 
     with open("game_calculations.txt", 'w') as file:
